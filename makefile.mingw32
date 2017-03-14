@@ -1,0 +1,62 @@
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#   ________        _________________.________
+#  /  _____/  ____ /   _____/   __   \   ____/
+# /   \  ___ /  _ \\_____  \\____    /____  \
+#  \    \_\  (  <_> )        \  /    //       \
+#   \______  /\____/_______  / /____//______  /
+#          \/              \/               \/
+# 
+# Author....: Alessandro Fraschetti
+# Module....: PanLR - VSTe PlugIn - makefile for mingw32
+# Notes.....:
+#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+
+PLUGINNAME = gosDelay
+
+
+VSTSDKDIR  = ../VSTSDK2.4
+SDKOBJPATH = obj
+SDKOBJ     =
+
+SRCPATH    = src
+RESPATH    = resource
+OBJPATH    = obj
+DLLPATH    = release
+
+  
+CC        = g++.exe
+WRES      = windres.exe
+DLLWRAP   = dllwrap.exe
+RM        = rm -f
+
+OBJ       = $(OBJPATH)/Main.o $(OBJPATH)/Program.o $(OBJPATH)/$(PLUGINNAME).o
+BIN       = $(PLUGINNAME).dll
+LIBS      = -L. --add-stdcall-alias -lole32 -lkernel32 -lgdi32 -luuid -luser32 -mwindows --no-export-all-symbols --def $(RESPATH)/$(PLUGINNAME).def   
+DEFFILE   = lib$(PLUGINNAME).def
+STATICLIB = lib$(PLUGINNAME).a
+CFLAGS    = -I"$(VSTSDKDIR)/pluginterfaces/vst2.x" -I"$(VSTSDKDIR)/public.sdk/source/vst2.x" -I"$(VSTSDKDIR)" -I"$(VSTSDKDIR)/vstgui.sf/vstgui" -I.
+LDFLAGS   = $(CFLAGS) -DBUILDING_DLL=1 -mwindows -O3
+
+
+include vstsdkmake.mingw32
+
+
+all: $(DLLPATH)/$(PLUGINNAME).dll
+
+.PHONY: clean
+clean:
+		$(RM) $(OBJ) $(SDKOBJ) $(DLLPATH)/$(BIN) $(DLLPATH)/$(DEFFILE) $(DLLPATH)/$(STATICLIB)
+
+
+$(DLLPATH)/$(BIN): $(OBJ)
+		$(DLLWRAP) --output-def $(DLLPATH)/$(DEFFILE) --driver-name c++ --implib $(DLLPATH)/$(STATICLIB) $(SDKOBJ) $(OBJ) $(LIBS) -o $(DLLPATH)/$(BIN)
+
+
+$(OBJPATH)/Main.o: $(SRCPATH)/Main.cpp
+		$(CC) -c $(SRCPATH)/Main.cpp -o $(OBJPATH)/Main.o $(LDFLAGS)
+$(OBJPATH)/Program.o: $(SRCPATH)/Program.cpp $(SRCPATH)/Program.h
+		$(CC) -c $(SRCPATH)/Program.cpp -o $(OBJPATH)/Program.o $(LDFLAGS)
+$(OBJPATH)/$(PLUGINNAME).o: $(SRCPATH)/$(PLUGINNAME).cpp $(SRCPATH)/$(PLUGINNAME).h
+		$(CC) -c $(SRCPATH)/$(PLUGINNAME).cpp -o $(OBJPATH)/$(PLUGINNAME).o $(LDFLAGS)

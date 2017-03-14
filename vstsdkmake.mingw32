@@ -1,0 +1,43 @@
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#   ________        _________________.________
+#  /  _____/  ____ /   _____/   __   \   ____/
+# /   \  ___ /  _ \\_____  \\____    /____  \
+#  \    \_\  (  <_> )        \  /    //       \
+#   \______  /\____/_______  / /____//______  /
+#          \/              \/               \/
+# 
+# Author....: Alessandro Fraschetti
+# Module....: vstsdkmake - makefile for mingw32
+# Notes.....:
+#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+ifndef VSTSDKDIR
+VSTSDKDIR  = ../VSTSDK2.4
+endif
+ifndef SDKOBJPATH
+SDKOBJPATH = obj
+endif
+
+CC      = g++.exe
+SDKOBJ  = $(SDKOBJPATH)/vstplugmain.o $(SDKOBJPATH)/audioeffect.o $(SDKOBJPATH)/audioeffectx.o
+CFLAGS  = -I"$(VSTSDKDIR)/pluginterfaces/vst2.x" -I"$(VSTSDKDIR)/public.sdk/source/vst2.x" -I"$(VSTSDKDIR)" -I.
+LDFLAGS = $(CFLAGS) -DBUILDING_DLL=1 -mwindows -O3
+RM      = rm -f
+
+
+all: $(SDKOBJ)
+
+.PHONY: clean
+clean:
+		$(RM) $(SDKOBJ)
+
+
+$(SDKOBJPATH)/vstplugmain.o: $(VSTSDKDIR)/public.sdk/source/vst2.x/vstplugmain.cpp
+		$(CC) -c $(VSTSDKDIR)/public.sdk/source/vst2.x/vstplugmain.cpp -o $(SDKOBJPATH)/vstplugmain.o $(LDFLAGS)
+
+$(SDKOBJPATH)/audioeffect.o: $(VSTSDKDIR)/public.sdk/source/vst2.x/audioeffect.cpp
+		$(CC) -c $(VSTSDKDIR)/public.sdk/source/vst2.x/audioeffect.cpp -o $(SDKOBJPATH)/audioeffect.o $(LDFLAGS)
+
+$(SDKOBJPATH)/audioeffectx.o: $(VSTSDKDIR)/public.sdk/source/vst2.x/audioeffectx.cpp
+		$(CC) -c $(VSTSDKDIR)/public.sdk/source/vst2.x/audioeffectx.cpp -o $(SDKOBJPATH)/audioeffectx.o $(LDFLAGS)

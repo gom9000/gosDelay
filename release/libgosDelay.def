@@ -1,0 +1,3 @@
+; c:\Programmi\C\MinGW\bin\dlltool --base-file C:/DOCUME~1/alex/IMPOST~1/Temp/cca02404.base --output-exp gosDelay.exp --dllname gosDelay.dll --output-def release/libgosDelay.def --add-stdcall-alias --no-export-all-symbols --exclude-symbol=DllMainCRTStartup@12 --def resource/gosDelay.def --output-lib release/libgosDelay.a
+EXPORTS
+	main = VSTPluginMain @ 1

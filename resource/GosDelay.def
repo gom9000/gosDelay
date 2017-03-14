@@ -1,0 +1,3 @@
+LIBRARY     gosDelay
+DESCRIPTION 'Simple Delay'
+EXPORTS     main=VSTPluginMain
